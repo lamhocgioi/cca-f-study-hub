@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CCA Foundations — Study &amp; Practice Hub</title>
+<title>CCA-F &amp; CCDV-F — Study &amp; Practice Hub</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -215,9 +215,7 @@
     white-space: nowrap;
     transition: background 0.15s, color 0.15s;
   }
-  .nav-tab:hover {
-    color: var(--ink);
-  }
+  .nav-tab:hover { color: var(--ink); }
   .nav-tab.active {
     background: var(--panel);
     color: var(--accent);
@@ -491,9 +489,35 @@
     padding-bottom: 14px;
     border-bottom: 1px solid var(--line);
   }
-  .subtabs {
+  .subtabs, .cert-switch {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cert-switch {
+    background: var(--panel-2);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+  }
+  .cert-btn {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cert-btn.active {
+    background: var(--panel);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
   }
   .subtab-btn {
     padding: 9px 16px;
@@ -536,6 +560,10 @@
     gap: 7px;
   }
   .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
   .btn-secondary {
     background: var(--panel);
     color: var(--ink);
@@ -551,17 +579,6 @@
     gap: 6px;
   }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger {
-    background: var(--bad);
-    color: #FFFFFF;
-    border: 1px solid var(--bad);
-    border-radius: 9px;
-    padding: 9px 16px;
-    font-family: var(--sans);
-    font-size: 13.5px;
-    font-weight: 600;
-    cursor: pointer;
-  }
 
   /* Mock Test Start Screen */
   .exam-intro {
@@ -659,8 +676,14 @@
     color: var(--ink-soft);
     font-weight: 600;
   }
+  .live-score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
   .mini-bar {
-    width: 140px;
+    width: 130px;
     height: 7px;
     background: var(--panel-2);
     border-radius: 999px;
@@ -672,6 +695,13 @@
     width: 0%;
     transition: width 0.2s;
   }
+  .live-tally {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .live-tally .g { color: var(--good); }
+  .live-tally .b { color: var(--bad); }
   .hud-right {
     display: flex;
     align-items: center;
@@ -800,6 +830,14 @@
     padding: 3px 9px;
     border-radius: 6px;
   }
+  .q-multi-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--signal);
+    background: var(--signal-soft);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
   .q-orig {
     font-family: var(--mono);
     font-size: 11.5px;
@@ -860,6 +898,9 @@
   .opt-item.selectable:hover {
     border-color: var(--accent);
     background: var(--panel-2);
+  }
+  .opt-item.locked {
+    cursor: default;
   }
   .opt-item.selected {
     border-color: var(--accent);
@@ -942,6 +983,29 @@
   }
   .opt-item.wrong-selected .opt-exp {
     border-left-color: var(--bad);
+  }
+  .general-exp {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--panel-2);
+    border-left: 3px solid var(--good);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .multi-check-bar {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .multi-hint {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    font-weight: 600;
   }
 
   /* Result Summary Banner */
@@ -1074,7 +1138,7 @@
     flex-shrink: 0;
   }
   .jump-input {
-    width: 86px;
+    width: 96px;
     padding: 9px 10px;
     border-radius: 9px;
     border: 1px solid var(--line);
@@ -1190,7 +1254,7 @@
 <header class="app-header">
   <div class="brand">
     <button class="btn-ic visible-on-study" id="menuBtn" type="button" aria-label="Mục lục">☰ Mục lục</button>
-    <span class="brand-badge">CCA-F</span>
+    <span class="brand-badge">CCA · CCDV</span>
     <span class="brand-title">Study &amp; Practice Hub</span>
   </div>
 
@@ -1199,7 +1263,7 @@
       Tài liệu ôn tập <span class="pill">30 bài</span>
     </button>
     <button class="nav-tab" id="tabPractice" type="button" role="tab" aria-selected="false">
-      Luyện tập Trắc nghiệm <span class="pill" id="qCountPill">162 câu</span>
+      Luyện tập Trắc nghiệm <span class="pill" id="qCountPill">317 câu</span>
     </button>
   </nav>
 
@@ -6451,12 +6515,17 @@ if not extraction.get("vendor"):  # missing critical field
 <div id="viewPractice" class="hide">
   <div class="practice-wrap">
     <div class="subtab-bar">
+      <div class="cert-switch" role="group" aria-label="Chọn bộ chứng chỉ">
+        <button class="cert-btn active" id="certCcaBtn" type="button">CCA-F (162 câu)</button>
+        <button class="cert-btn" id="certCcdvBtn" type="button">CCDV-F (155 câu)</button>
+      </div>
+
       <div class="subtabs" role="tablist">
         <button class="subtab-btn active" id="subMockBtn" type="button">
           ⏱ Thi thử (Mock Test · 60 câu)
         </button>
         <button class="subtab-btn" id="subBankBtn" type="button">
-          📚 Ngân hàng câu hỏi (162 câu)
+          📚 Ngân hàng câu hỏi (<span id="bankSubtabCount">162</span> câu)
         </button>
       </div>
     </div>
@@ -6464,8 +6533,8 @@ if not extraction.get("vendor"):  # missing critical field
     <!-- SUB-TAB 1: MOCK TEST -->
     <section id="panelMock">
       <div class="exam-intro" id="examIntro">
-        <h2>Đề thi thử chứng chỉ CCA Foundations</h2>
-        <p>Hệ thống lấy ngẫu nhiên 60 câu hỏi từ ngân hàng 162 câu đã kiểm chứng và đảo ngẫu nhiên thứ tự các đáp án cho mỗi lượt thi.</p>
+        <h2 id="examIntroTitle">Đề thi thử chứng chỉ CCA Foundations (CCA-F)</h2>
+        <p id="examIntroDesc">Hệ thống lấy ngẫu nhiên 60 câu hỏi từ ngân hàng 162 câu đã kiểm chứng, đảo ngẫu nhiên vị trí đáp án, chấm và khóa ngay sau khi bạn chọn.</p>
         <div class="spec-grid">
           <div class="spec-box">
             <div class="k">Số lượng câu</div>
@@ -6476,8 +6545,8 @@ if not extraction.get("vendor"):  # missing critical field
             <div class="v">90 phút (90:00)</div>
           </div>
           <div class="spec-box">
-            <div class="k">Đảo đáp án</div>
-            <div class="v">Tự động mỗi đề</div>
+            <div class="k">Chế độ chấm</div>
+            <div class="v">Hiện kết quả ngay</div>
           </div>
         </div>
         <button class="btn-primary" id="btnStartExam" type="button">▶ Bắt đầu thi</button>
@@ -6488,7 +6557,7 @@ if not extraction.get("vendor"):  # missing critical field
         <div class="result-card hide" id="resultCard">
           <div class="result-top">
             <div>
-              <div style="font-size:12.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;">Kết quả bài thi thử</div>
+              <div style="font-size:12.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;" id="resultCertLabel">Kết quả bài thi thử</div>
               <div class="score-big" id="scoreSummary">0 / 60 câu đúng (0%)</div>
             </div>
             <button class="btn-primary" id="btnNewExamResult" type="button">↻ Làm đề mới</button>
@@ -6507,13 +6576,16 @@ if not extraction.get("vendor"):  # missing critical field
           <div class="hud-left">
             <div class="timer-box" id="timerBox">⏱ <span id="timerText">90:00</span></div>
             <div>
-              <div class="progress-stat" id="answeredStat">Đã làm: 0 / 60 câu</div>
-              <div class="mini-bar"><div id="answeredBar"></div></div>
+              <div class="progress-stat" id="answeredStat">Đã chốt: 0 / 60 câu</div>
+              <div class="live-score-row">
+                <div class="mini-bar"><div id="answeredBar"></div></div>
+                <span class="live-tally" id="liveTally"><span class="g">✓ 0</span> · <span class="b">✗ 0</span></span>
+              </div>
             </div>
           </div>
           <div class="hud-right">
             <button class="btn-secondary" id="btnNewExamHud" type="button">↻ Làm đề mới</button>
-            <button class="btn-primary" id="btnSubmitExam" type="button">✓ Nộp bài</button>
+            <button class="btn-primary" id="btnSubmitExam" type="button">✓ Nộp bài &amp; Tổng kết</button>
           </div>
         </div>
 
@@ -6526,8 +6598,9 @@ if not extraction.get("vendor"):  # missing critical field
             </div>
             <div class="palette-grid" id="paletteGrid"></div>
             <div class="pal-legend" id="paletteLegend">
+              <span><i class="dot" style="background:var(--good);"></i> Đúng</span>
+              <span><i class="dot" style="background:var(--bad);"></i> Sai</span>
               <span><i class="dot" style="background:var(--panel-3);border:1px solid var(--line);"></i> Chưa làm</span>
-              <span><i class="dot" style="background:var(--accent-soft);border:1px solid var(--accent);"></i> Đã chọn</span>
               <span><i class="dot" style="background:var(--signal);"></i> Đánh dấu</span>
             </div>
           </aside>
@@ -6545,7 +6618,7 @@ if not extraction.get("vendor"):  # missing critical field
               id="bankSearchInput"
               class="search-input"
               type="text"
-              placeholder="Tìm câu hỏi, đáp án, giải thích hoặc mã Q (VD: Q45, fork_session, PreToolUse 500)... [Phím /]"
+              placeholder="Tìm câu hỏi, đáp án, giải thích hoặc mã Q (VD: Q45, fork_session, Compaction)... [Phím /]"
               autocomplete="off"
             >
             <button class="clear-search hide" id="btnClearSearch" type="button" title="Xóa tìm kiếm">×</button>
@@ -6557,7 +6630,7 @@ if not extraction.get("vendor"):  # missing critical field
         </div>
         <div class="bank-meta-row">
           <span id="bankCountLabel">Hiển thị 162 / 162 câu hỏi</span>
-          <label class="toggle-label">
+          <label class="toggle-label" id="distractorToggleWrap">
             <input type="checkbox" id="chkShowAllExplanations">
             <span>Hiện giải thích cho cả đáp án nhiễu</span>
           </label>
@@ -6588,7 +6661,24 @@ if not extraction.get("vendor"):  # missing critical field
 (function () {
   "use strict";
 
-  var QUESTIONS = Array.isArray(window.CCA_QUESTIONS) ? window.CCA_QUESTIONS : [];
+  var BANKS = {
+    cca: {
+      code: "CCA-F",
+      title: "Đề thi thử chứng chỉ CCA Foundations (CCA-F)",
+      questions: Array.isArray(window.CCA_QUESTIONS) ? window.CCA_QUESTIONS : []
+    },
+    ccdv: {
+      code: "CCDV-F",
+      title: "Đề thi thử chứng chỉ Claude Certified Developer Foundations (CCDV-F)",
+      questions: Array.isArray(window.CCDV_QUESTIONS) ? window.CCDV_QUESTIONS : []
+    }
+  };
+
+  var activeCert = "cca";
+  function getActiveQuestions() {
+    return BANKS[activeCert].questions;
+  }
+
   var LETTERS = ["A", "B", "C", "D", "E", "F"];
   var root = document.documentElement;
   var body = document.body;
@@ -6738,6 +6828,57 @@ if not extraction.get("vendor"):  # missing critical field
     return copy;
   }
 
+  function arraysEqual(a, b) {
+    if (!a || !b || a.length !== b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  /* ---------------- Cert Bank Switching ---------------- */
+  var certCcaBtn = document.getElementById("certCcaBtn");
+  var certCcdvBtn = document.getElementById("certCcdvBtn");
+  var bankSubtabCount = document.getElementById("bankSubtabCount");
+  var examIntroTitle = document.getElementById("examIntroTitle");
+  var examIntroDesc = document.getElementById("examIntroDesc");
+  var distractorToggleWrap = document.getElementById("distractorToggleWrap");
+
+  function switchCertBank(certKey) {
+    if (activeCert === certKey) return;
+    stopTimer();
+    activeCert = certKey;
+    var bank = BANKS[activeCert];
+    var totalQ = bank.questions.length;
+
+    certCcaBtn.classList.toggle("active", certKey === "cca");
+    certCcdvBtn.classList.toggle("active", certKey === "ccdv");
+    bankSubtabCount.textContent = String(totalQ);
+    examIntroTitle.textContent = bank.title;
+    examIntroDesc.textContent =
+      "Hệ thống lấy ngẫu nhiên 60 câu hỏi từ ngân hàng " + totalQ +
+      " câu (" + bank.code + "), đảo ngẫu nhiên vị trí đáp án, chấm và khóa ngay sau khi bạn chọn.";
+
+    // Reset mock test view to intro
+    examState.questions = [];
+    examState.answers = {};
+    examState.locked = {};
+    examState.flagged = {};
+    examState.submitted = false;
+    examIntro.classList.remove("hide");
+    examActive.classList.add("hide");
+
+    // Update Question Bank controls
+    jumpInput.max = String(totalQ);
+    jumpInput.placeholder = "Số Q (1-" + totalQ + ")";
+    distractorToggleWrap.classList.toggle("hide", certKey === "ccdv");
+    bankSearchInput.value = "";
+    renderBank();
+  }
+
+  certCcaBtn.addEventListener("click", function () { switchCertBank("cca"); });
+  certCcdvBtn.addEventListener("click", function () { switchCertBank("ccdv"); });
+
   /* ---------------- View 2: Sub-tabs ---------------- */
   var subMockBtn = document.getElementById("subMockBtn");
   var subBankBtn = document.getElementById("subBankBtn");
@@ -6759,13 +6900,15 @@ if not extraction.get("vendor"):  # missing critical field
     if (!bankRendered) renderBank();
   });
 
-  /* ---------------- Sub-tab 1: Mock Test (60 Qs, 90 Mins, Shuffled Options) ---------------- */
+  /* ---------------- Sub-tab 1: Mock Test (Immediate Feedback & Lock) ---------------- */
   var EXAM_SIZE = 60;
   var EXAM_SECONDS = 90 * 60;
 
   var examState = {
+    certCode: "CCA-F",
     questions: [],
-    answers: {},
+    answers: {},   // idx -> sorted array of selected option indices, e.g. [1] or [0, 2]
+    locked: {},    // idx -> true once graded & locked
     flagged: {},
     submitted: false,
     secondsLeft: EXAM_SECONDS,
@@ -6781,6 +6924,7 @@ if not extraction.get("vendor"):  # missing critical field
   var timerText = document.getElementById("timerText");
   var answeredStat = document.getElementById("answeredStat");
   var answeredBar = document.getElementById("answeredBar");
+  var liveTally = document.getElementById("liveTally");
   var flagCountLabel = document.getElementById("flagCountLabel");
   var examQuestionList = document.getElementById("examQuestionList");
   var paletteGrid = document.getElementById("paletteGrid");
@@ -6827,33 +6971,39 @@ if not extraction.get("vendor"):  # missing critical field
 
   function startNewExam() {
     stopTimer();
-    var picked = shuffleArray(QUESTIONS).slice(0, Math.min(EXAM_SIZE, QUESTIONS.length));
+    var sourceQuestions = getActiveQuestions();
+    examState.certCode = BANKS[activeCert].code;
+    var picked = shuffleArray(sourceQuestions).slice(0, Math.min(EXAM_SIZE, sourceQuestions.length));
     examState.questions = picked.map(function (q, index) {
+      var origCorrectSet = Array.isArray(q.correctIndices) ? q.correctIndices : [q.correctIndex];
       var indexedOpts = q.options.map(function (opt, oIdx) {
         return {
           text: opt.text,
-          explanation: opt.explanation,
-          isCorrect: oIdx === q.correctIndex
+          explanation: opt.explanation || "",
+          isCorrect: origCorrectSet.indexOf(oIdx) !== -1
         };
       });
       var shuffledOpts = shuffleArray(indexedOpts);
-      var newCorrectIdx = 0;
+      var newCorrectIndices = [];
       for (var i = 0; i < shuffledOpts.length; i++) {
         if (shuffledOpts[i].isCorrect) {
-          newCorrectIdx = i;
-          break;
+          newCorrectIndices.push(i);
         }
       }
       return {
         examIndex: index,
         id: q.id,
         num: q.num,
+        multi: !!q.multi || newCorrectIndices.length > 1,
         question: q.question,
         options: shuffledOpts,
-        correctIndex: newCorrectIdx
+        correctIndex: newCorrectIndices[0],
+        correctIndices: newCorrectIndices,
+        generalExplanation: q.generalExplanation || ""
       };
     });
     examState.answers = {};
+    examState.locked = {};
     examState.flagged = {};
     examState.submitted = false;
     examState.reviewFilter = "all";
@@ -6864,8 +7014,9 @@ if not extraction.get("vendor"):  # missing critical field
     resultCard.classList.add("hide");
 
     paletteLegend.innerHTML =
+      '<span><i class="dot" style="background:var(--good);"></i> Đúng</span>' +
+      '<span><i class="dot" style="background:var(--bad);"></i> Sai</span>' +
       '<span><i class="dot" style="background:var(--panel-3);border:1px solid var(--line);"></i> Chưa làm</span>' +
-      '<span><i class="dot" style="background:var(--accent-soft);border:1px solid var(--accent);"></i> Đã chọn</span>' +
       '<span><i class="dot" style="background:var(--signal);"></i> Đánh dấu</span>';
 
     renderExamQuestions();
@@ -6875,12 +7026,46 @@ if not extraction.get("vendor"):  # missing critical field
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function updateExamProgress() {
+  function computeExamTally() {
     var total = examState.questions.length;
-    var answeredCount = Object.keys(examState.answers).length;
+    var lockedCount = 0;
+    var correct = 0;
+    var wrong = 0;
+    var unanswered = 0;
+
+    examState.questions.forEach(function (q, idx) {
+      var isLocked = !!examState.locked[idx];
+      var chosen = examState.answers[idx] || [];
+      if (isLocked) {
+        lockedCount++;
+        if (chosen.length === 0) {
+          unanswered++;
+        } else if (arraysEqual(chosen, q.correctIndices)) {
+          correct++;
+        } else {
+          wrong++;
+        }
+      } else {
+        unanswered++;
+      }
+    });
+
+    return {
+      total: total,
+      lockedCount: lockedCount,
+      correct: correct,
+      wrong: wrong,
+      unanswered: unanswered
+    };
+  }
+
+  function updateExamProgress() {
+    var tally = computeExamTally();
     var flaggedCount = Object.keys(examState.flagged).length;
-    answeredStat.textContent = "Đã làm: " + answeredCount + " / " + total + " câu";
-    answeredBar.style.width = (total > 0 ? (answeredCount / total) * 100 : 0) + "%";
+    answeredStat.textContent = "[" + examState.certCode + "] Đã chốt: " + tally.lockedCount + " / " + tally.total + " câu";
+    answeredBar.style.width = (tally.total > 0 ? (tally.lockedCount / tally.total) * 100 : 0) + "%";
+    liveTally.innerHTML =
+      '<span class="g">✓ ' + tally.correct + '</span> · <span class="b">✗ ' + tally.wrong + "</span>";
     flagCountLabel.textContent = flaggedCount + " đánh dấu";
   }
 
@@ -6889,13 +7074,19 @@ if not extraction.get("vendor"):  # missing critical field
     examState.questions.forEach(function (q, idx) {
       var cls = ["pal-btn"];
       if (examState.flagged[idx]) cls.push("flagged");
-      if (!examState.submitted) {
-        if (examState.answers[idx] !== undefined) cls.push("answered");
-      } else {
-        var chosen = examState.answers[idx];
-        if (chosen === q.correctIndex) cls.push("res-correct");
-        else if (chosen !== undefined) cls.push("res-wrong");
+      var chosen = examState.answers[idx] || [];
+      var isLocked = !!examState.locked[idx];
+
+      if (isLocked) {
+        if (chosen.length > 0 && arraysEqual(chosen, q.correctIndices)) {
+          cls.push("res-correct");
+        } else if (chosen.length > 0) {
+          cls.push("res-wrong");
+        }
+      } else if (chosen.length > 0) {
+        cls.push("answered");
       }
+
       html += '<button type="button" class="' + cls.join(" ") + '" data-jump-idx="' + idx + '">' + (idx + 1) + "</button>";
     });
     paletteGrid.innerHTML = html;
@@ -6916,13 +7107,124 @@ if not extraction.get("vendor"):  # missing critical field
     if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  function renderExamQuestions() {
+  function buildExamCardInnerHtml(q, idx) {
     var total = examState.questions.length;
+    var chosen = examState.answers[idx] || [];
+    var isLocked = !!examState.locked[idx];
+    var isUnanswered = chosen.length === 0;
+    var isCorrect = isLocked && !isUnanswered && arraysEqual(chosen, q.correctIndices);
+
+    var multiBadge = q.multi
+      ? '<span class="q-multi-badge">Chọn ' + q.correctIndices.length + " đáp án</span>"
+      : "";
+
+    var statusBadge = "";
+    var origBadge = "";
+    if (isLocked) {
+      origBadge = '<span class="q-orig">' + escapeHtml(examState.certCode + " · " + q.id) + "</span>";
+      if (isCorrect) statusBadge = '<span class="status-badge ok">✓ Đúng · Đã khóa</span>';
+      else if (isUnanswered) statusBadge = '<span class="status-badge skip">— Chưa chọn</span>';
+      else statusBadge = '<span class="status-badge err">✗ Sai · Đã khóa</span>';
+    }
+
+    var flagCls = examState.flagged[idx] ? "flag-btn active" : "flag-btn";
+    var flagLabel = examState.flagged[idx] ? "🚩 Đã đánh dấu" : "⚑ Đánh dấu";
+
+    var optsHtml = "";
+    q.options.forEach(function (opt, oIdx) {
+      var optCls = ["opt-item"];
+      var tagHtml = "";
+      var expHtml = "";
+      var isSelected = chosen.indexOf(oIdx) !== -1;
+      var isOptCorrect = q.correctIndices.indexOf(oIdx) !== -1;
+
+      if (!isLocked) {
+        optCls.push("selectable");
+        if (isSelected) optCls.push("selected");
+      } else {
+        optCls.push("locked");
+        if (isOptCorrect) {
+          optCls.push("correct");
+          tagHtml = isSelected
+            ? '<span class="opt-tag good">✓ Bạn chọn đúng</span>'
+            : '<span class="opt-tag good">✓ Đáp án đúng</span>';
+        } else if (isSelected) {
+          optCls.push("wrong-selected");
+          tagHtml = '<span class="opt-tag bad">✗ Bạn chọn</span>';
+        }
+        if (!q.generalExplanation && opt.explanation) {
+          expHtml = '<div class="opt-exp">' + escapeHtml(opt.explanation) + "</div>";
+        }
+      }
+
+      optsHtml +=
+        '<div class="' + optCls.join(" ") + '" data-q-idx="' + idx + '" data-opt-idx="' + oIdx + '">' +
+          '<div class="opt-row">' +
+            '<span class="opt-key">' + LETTERS[oIdx] + "</span>" +
+            '<div class="opt-text">' + escapeHtml(opt.text) + "</div>" +
+            tagHtml +
+          "</div>" +
+          expHtml +
+        "</div>";
+    });
+
+    var multiActionHtml = "";
+    if (q.multi && !isLocked) {
+      var reqCount = q.correctIndices.length;
+      var curCount = chosen.length;
+      var disabledAttr = curCount === 0 ? " disabled" : "";
+      multiActionHtml =
+        '<div class="multi-check-bar">' +
+          '<span class="multi-hint">Đã chọn ' + curCount + " / " + reqCount + " đáp án (bấm Kiểm tra để chốt)</span>" +
+          '<button type="button" class="btn-primary" data-check-multi-idx="' + idx + '"' + disabledAttr + ">✓ Kiểm tra đáp án</button>" +
+        "</div>";
+    }
+
+    var genExpHtml = "";
+    if (isLocked && q.generalExplanation) {
+      genExpHtml = '<div class="general-exp">' + escapeHtml(q.generalExplanation) + "</div>";
+    }
+
+    return (
+      '<div class="q-top">' +
+        '<div class="q-badges">' +
+          '<span class="q-num">Câu ' + (idx + 1) + " / " + total + "</span>" +
+          multiBadge +
+          origBadge +
+          statusBadge +
+        "</div>" +
+        '<button type="button" class="' + flagCls + '" data-flag-idx="' + idx + '">' + flagLabel + "</button>" +
+      "</div>" +
+      '<div class="q-stem">' + escapeHtml(q.question) + "</div>" +
+      '<div class="opt-group">' + optsHtml + "</div>" +
+      multiActionHtml +
+      genExpHtml
+    );
+  }
+
+  function refreshSingleExamCard(idx) {
+    var card = document.getElementById("exam-q-" + idx);
+    var q = examState.questions[idx];
+    if (!card || !q) return;
+
+    var chosen = examState.answers[idx] || [];
+    var isLocked = !!examState.locked[idx];
+    var isCorrect = isLocked && chosen.length > 0 && arraysEqual(chosen, q.correctIndices);
+
+    card.classList.remove("card-correct", "card-wrong");
+    if (isLocked) {
+      card.classList.add(isCorrect ? "card-correct" : "card-wrong");
+    }
+    card.innerHTML = buildExamCardInnerHtml(q, idx);
+  }
+
+  function renderExamQuestions() {
     var html = "";
     examState.questions.forEach(function (q, idx) {
-      var chosen = examState.answers[idx];
-      var isCorrect = chosen === q.correctIndex;
-      var isUnanswered = chosen === undefined;
+      var chosen = examState.answers[idx] || [];
+      var isLocked = !!examState.locked[idx];
+      var isUnanswered = chosen.length === 0;
+      var isCorrect = isLocked && !isUnanswered && arraysEqual(chosen, q.correctIndices);
 
       if (examState.submitted) {
         if (examState.reviewFilter === "wrong" && (isCorrect || isUnanswered)) return;
@@ -6931,67 +7233,13 @@ if not extraction.get("vendor"):  # missing critical field
       }
 
       var cardCls = ["q-card"];
-      if (examState.submitted) {
+      if (isLocked) {
         cardCls.push(isCorrect ? "card-correct" : "card-wrong");
       }
 
-      var statusBadge = "";
-      var origBadge = "";
-      if (examState.submitted) {
-        origBadge = '<span class="q-orig">Mã gốc: ' + escapeHtml(q.id) + "</span>";
-        if (isCorrect) statusBadge = '<span class="status-badge ok">✓ Đúng</span>';
-        else if (isUnanswered) statusBadge = '<span class="status-badge skip">— Chưa chọn</span>';
-        else statusBadge = '<span class="status-badge err">✗ Sai</span>';
-      }
-
-      var flagCls = examState.flagged[idx] ? "flag-btn active" : "flag-btn";
-      var flagLabel = examState.flagged[idx] ? "🚩 Đã đánh dấu" : "⚑ Đánh dấu";
-
-      var optsHtml = "";
-      q.options.forEach(function (opt, oIdx) {
-        var optCls = ["opt-item"];
-        var tagHtml = "";
-        var expHtml = "";
-
-        if (!examState.submitted) {
-          optCls.push("selectable");
-          if (chosen === oIdx) optCls.push("selected");
-        } else {
-          if (oIdx === q.correctIndex) {
-            optCls.push("correct");
-            tagHtml = '<span class="opt-tag good">✓ Đáp án đúng</span>';
-          } else if (chosen === oIdx) {
-            optCls.push("wrong-selected");
-            tagHtml = '<span class="opt-tag bad">✗ Bạn chọn</span>';
-          }
-          if (opt.explanation) {
-            expHtml = '<div class="opt-exp">' + escapeHtml(opt.explanation) + "</div>";
-          }
-        }
-
-        optsHtml +=
-          '<div class="' + optCls.join(" ") + '" data-q-idx="' + idx + '" data-opt-idx="' + oIdx + '">' +
-            '<div class="opt-row">' +
-              '<span class="opt-key">' + LETTERS[oIdx] + "</span>" +
-              '<div class="opt-text">' + escapeHtml(opt.text) + "</div>" +
-              tagHtml +
-            "</div>" +
-            expHtml +
-          "</div>";
-      });
-
       html +=
         '<article class="' + cardCls.join(" ") + '" id="exam-q-' + idx + '">' +
-          '<div class="q-top">' +
-            '<div class="q-badges">' +
-              '<span class="q-num">Câu ' + (idx + 1) + " / " + total + "</span>" +
-              origBadge +
-              statusBadge +
-            "</div>" +
-            '<button type="button" class="' + flagCls + '" data-flag-idx="' + idx + '">' + flagLabel + "</button>" +
-          "</div>" +
-          '<div class="q-stem">' + escapeHtml(q.question) + "</div>" +
-          '<div class="opt-group">' + optsHtml + "</div>" +
+          buildExamCardInnerHtml(q, idx) +
         "</article>";
     });
 
@@ -7002,6 +7250,7 @@ if not extraction.get("vendor"):  # missing critical field
   }
 
   examQuestionList.addEventListener("click", function (e) {
+    // 1. Flag toggle
     var flagBtn = e.target.closest("[data-flag-idx]");
     if (flagBtn) {
       var fIdx = Number(flagBtn.getAttribute("data-flag-idx"));
@@ -7014,21 +7263,56 @@ if not extraction.get("vendor"):  # missing critical field
       return;
     }
 
-    if (examState.submitted) return;
+    // 2. Multi-select "Kiểm tra đáp án" button
+    var checkBtn = e.target.closest("[data-check-multi-idx]");
+    if (checkBtn) {
+      var mIdx = Number(checkBtn.getAttribute("data-check-multi-idx"));
+      if (examState.locked[mIdx]) return;
+      var sel = examState.answers[mIdx] || [];
+      if (sel.length === 0) return;
+      examState.locked[mIdx] = true;
+      refreshSingleExamCard(mIdx);
+      renderPalette();
+      updateExamProgress();
+      return;
+    }
+
+    // 3. Option click
     var optEl = e.target.closest("[data-q-idx][data-opt-idx]");
     if (!optEl) return;
     var qIdx = Number(optEl.getAttribute("data-q-idx"));
     var oIdx = Number(optEl.getAttribute("data-opt-idx"));
-    examState.answers[qIdx] = oIdx;
 
-    var card = document.getElementById("exam-q-" + qIdx);
-    if (card) {
-      Array.prototype.slice.call(card.querySelectorAll(".opt-item")).forEach(function (el, i) {
-        el.classList.toggle("selected", i === oIdx);
-      });
+    // Ignore clicks if already locked or exam submitted
+    if (examState.submitted || examState.locked[qIdx]) return;
+
+    var qObj = examState.questions[qIdx];
+    if (!qObj) return;
+
+    if (qObj.multi) {
+      // Multi-select: toggle option, wait for user to click "Kiểm tra đáp án"
+      var cur = (examState.answers[qIdx] || []).slice();
+      var pos = cur.indexOf(oIdx);
+      if (pos !== -1) cur.splice(pos, 1);
+      else cur.push(oIdx);
+      cur.sort(function (a, b) { return a - b; });
+
+      if (cur.length === 0) {
+        delete examState.answers[qIdx];
+      } else {
+        examState.answers[qIdx] = cur;
+      }
+      refreshSingleExamCard(qIdx);
+      renderPalette();
+      updateExamProgress();
+    } else {
+      // Single-select: immediately record, grade, and lock!
+      examState.answers[qIdx] = [oIdx];
+      examState.locked[qIdx] = true;
+      refreshSingleExamCard(qIdx);
+      renderPalette();
+      updateExamProgress();
     }
-    renderPalette();
-    updateExamProgress();
   });
 
   function submitExam(isTimeout) {
@@ -7037,37 +7321,32 @@ if not extraction.get("vendor"):  # missing critical field
     examState.submitted = true;
     examState.reviewFilter = "all";
 
-    var total = examState.questions.length;
-    var correct = 0;
-    var wrong = 0;
-    var unanswered = 0;
-
+    // Lock all questions (including any unanswered ones so their correct answers & explanations are revealed)
     examState.questions.forEach(function (q, idx) {
-      var chosen = examState.answers[idx];
-      if (chosen === undefined) unanswered++;
-      else if (chosen === q.correctIndex) correct++;
-      else wrong++;
+      examState.locked[idx] = true;
     });
 
-    var pct = total > 0 ? ((correct / total) * 100).toFixed(1) : "0.0";
+    var tally = computeExamTally();
+    var pct = tally.total > 0 ? ((tally.correct / tally.total) * 100).toFixed(1) : "0.0";
     var timeUsed = EXAM_SECONDS - examState.secondsLeft;
     var usedMin = Math.floor(timeUsed / 60);
     var usedSec = timeUsed % 60;
 
+    document.getElementById("resultCertLabel").textContent = "Kết quả bài thi thử · " + examState.certCode;
     document.getElementById("scoreSummary").textContent =
-      correct + " / " + total + " câu đúng (" + pct + "%)" + (isTimeout ? " — Hết giờ tự động nộp" : "");
+      tally.correct + " / " + tally.total + " câu đúng (" + pct + "%)" + (isTimeout ? " — Hết giờ tự động nộp" : "");
 
     document.getElementById("resultStats").innerHTML =
-      '<span class="stat-pill good">✓ Đúng: ' + correct + "</span>" +
-      '<span class="stat-pill bad">✗ Sai: ' + wrong + "</span>" +
-      '<span class="stat-pill">Chưa trả lời: ' + unanswered + "</span>" +
+      '<span class="stat-pill good">✓ Đúng: ' + tally.correct + "</span>" +
+      '<span class="stat-pill bad">✗ Sai: ' + tally.wrong + "</span>" +
+      '<span class="stat-pill">Chưa trả lời: ' + tally.unanswered + "</span>" +
       '<span class="stat-pill">⏱ Thời gian: ' + usedMin + " phút " + usedSec + " giây</span>";
 
     var chips = document.querySelectorAll("#reviewFilters .filter-chip");
-    chips[0].textContent = "Tất cả (" + total + ")";
-    chips[1].textContent = "Làm sai (" + wrong + ")";
-    chips[2].textContent = "Làm đúng (" + correct + ")";
-    chips[3].textContent = "Chưa trả lời (" + unanswered + ")";
+    chips[0].textContent = "Tất cả (" + tally.total + ")";
+    chips[1].textContent = "Làm sai (" + tally.wrong + ")";
+    chips[2].textContent = "Làm đúng (" + tally.correct + ")";
+    chips[3].textContent = "Chưa trả lời (" + tally.unanswered + ")";
     Array.prototype.slice.call(chips).forEach(function (c, i) {
       c.classList.toggle("active", i === 0);
     });
@@ -7124,13 +7403,12 @@ if not extraction.get("vendor"):  # missing critical field
     );
   });
   document.getElementById("btnSubmitExam").addEventListener("click", function () {
-    var total = examState.questions.length;
-    var answered = Object.keys(examState.answers).length;
-    var remaining = total - answered;
+    var tally = computeExamTally();
+    var remaining = tally.total - tally.lockedCount;
     var msg = remaining > 0
-      ? "Bạn đã trả lời " + answered + "/" + total + " câu (còn " + remaining + " câu chưa chọn). Bạn chắc chắn muốn nộp bài?"
-      : "Bạn đã hoàn thành đủ " + total + "/" + total + " câu. Nộp bài để xem điểm và giải thích chi tiết?";
-    openModal("Xác nhận nộp bài?", msg, "Nộp bài ngay", function () { submitExam(false); });
+      ? "Bạn đã chốt " + tally.lockedCount + "/" + tally.total + " câu (còn " + remaining + " câu chưa chốt/chưa làm). Kết thúc và tổng kết điểm ngay?"
+      : "Bạn đã hoàn thành đủ " + tally.total + "/" + tally.total + " câu. Tổng kết điểm và lọc danh sách câu làm sai?";
+    openModal("Tổng kết bài thi?", msg, "Nộp bài & Tổng kết", function () { submitExam(false); });
   });
 
   document.getElementById("reviewFilters").addEventListener("click", function (e) {
@@ -7153,20 +7431,25 @@ if not extraction.get("vendor"):  # missing critical field
   var jumpInput = document.getElementById("jumpInput");
   var btnJumpQ = document.getElementById("btnJumpQ");
 
-  // Pre-build lowercase search index for instant filtering across 162 questions
-  var searchIndex = QUESTIONS.map(function (q) {
-    var combined = [q.id, String(q.num), q.question]
-      .concat(q.options.map(function (o) { return o.text + " " + o.explanation; }))
-      .join(" ")
-      .toLowerCase();
-    return {
-      q: q,
-      haystack: combined
-    };
-  });
+  function buildSearchIndex(questions) {
+    return questions.map(function (q) {
+      var combined = [q.id, String(q.num), q.question, q.generalExplanation || ""]
+        .concat(q.options.map(function (o) { return o.text + " " + (o.explanation || ""); }))
+        .join(" ")
+        .toLowerCase();
+      return { q: q, haystack: combined };
+    });
+  }
+
+  var searchIndices = {
+    cca: buildSearchIndex(BANKS.cca.questions),
+    ccdv: buildSearchIndex(BANKS.ccdv.questions)
+  };
 
   function renderBank() {
     bankRendered = true;
+    var currentIndex = searchIndices[activeCert];
+    var totalQuestions = currentIndex.length;
     var rawQuery = bankSearchInput.value.trim();
     btnClearSearch.classList.toggle("hide", rawQuery.length === 0);
 
@@ -7182,8 +7465,8 @@ if not extraction.get("vendor"):  # missing critical field
     }
 
     var filtered = [];
-    for (var i = 0; i < searchIndex.length; i++) {
-      var item = searchIndex[i];
+    for (var i = 0; i < currentIndex.length; i++) {
+      var item = currentIndex[i];
       if (tokens.length === 0) {
         filtered.push(item.q);
         continue;
@@ -7206,7 +7489,8 @@ if not extraction.get("vendor"):  # missing critical field
       });
     }
 
-    bankCountLabel.textContent = "Hiển thị " + filtered.length + " / " + QUESTIONS.length + " câu hỏi";
+    bankCountLabel.textContent =
+      "[" + BANKS[activeCert].code + "] Hiển thị " + filtered.length + " / " + totalQuestions + " câu hỏi";
     var showAllExp = chkShowAllExplanations.checked;
 
     if (filtered.length === 0) {
@@ -7220,14 +7504,18 @@ if not extraction.get("vendor"):  # missing critical field
     var html = "";
     for (var k = 0; k < filtered.length; k++) {
       var q = filtered[k];
+      var correctSet = Array.isArray(q.correctIndices) ? q.correctIndices : [q.correctIndex];
+      var multiBadge = q.multi
+        ? '<span class="q-multi-badge">Chọn ' + correctSet.length + " đáp án</span>"
+        : "";
       var optsHtml = "";
       for (var oIdx = 0; oIdx < q.options.length; oIdx++) {
         var opt = q.options[oIdx];
-        var isCorrect = oIdx === q.correctIndex;
+        var isCorrect = correctSet.indexOf(oIdx) !== -1;
         var optCls = isCorrect ? "opt-item correct" : "opt-item";
         var tagHtml = isCorrect ? '<span class="opt-tag good">✓ Đáp án đúng</span>' : "";
         var expHtml = "";
-        if (opt.explanation && (isCorrect || showAllExp)) {
+        if (!q.generalExplanation && opt.explanation && (isCorrect || showAllExp)) {
           expHtml = '<div class="opt-exp">' + highlightTokens(opt.explanation, tokens) + "</div>";
         }
 
@@ -7242,15 +7530,22 @@ if not extraction.get("vendor"):  # missing critical field
           "</div>";
       }
 
+      var genExpHtml = "";
+      if (q.generalExplanation) {
+        genExpHtml = '<div class="general-exp">' + highlightTokens(q.generalExplanation, tokens) + "</div>";
+      }
+
       html +=
-        '<article class="q-card" id="bank-' + q.id + '">' +
+        '<article class="q-card" id="bank-' + activeCert + "-" + q.id + '">' +
           '<div class="q-top">' +
             '<div class="q-badges">' +
               '<span class="q-num">' + highlightTokens(q.id, tokens) + "</span>" +
+              multiBadge +
             "</div>" +
           "</div>" +
           '<div class="q-stem">' + highlightTokens(q.question, tokens) + "</div>" +
           '<div class="opt-group">' + optsHtml + "</div>" +
+          genExpHtml +
         "</article>";
     }
     bankQuestionList.innerHTML = html;
@@ -7271,13 +7566,14 @@ if not extraction.get("vendor"):  # missing critical field
   chkShowAllExplanations.addEventListener("change", renderBank);
 
   function jumpToQuestionNumber() {
+    var totalQ = getActiveQuestions().length;
     var n = Number(jumpInput.value);
-    if (!n || n < 1 || n > QUESTIONS.length) return;
+    if (!n || n < 1 || n > totalQ) return;
     if (bankSearchInput.value.trim() !== "") {
       bankSearchInput.value = "";
       renderBank();
     }
-    var target = document.getElementById("bank-Q" + n);
+    var target = document.getElementById("bank-" + activeCert + "-Q" + n);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -7288,7 +7584,7 @@ if not extraction.get("vendor"):  # missing critical field
     if (e.key === "Enter") jumpToQuestionNumber();
   });
 
-  /* Keyboard shortcuts: '/' focuses search in Question Bank, 'Escape' closes modal or clears search */
+  /* Keyboard shortcuts */
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
       if (!confirmModal.classList.contains("hide")) {
