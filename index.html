@@ -1244,6 +1244,121 @@
     .jump-input { flex: 1; }
     .palette-grid { grid-template-columns: repeat(6, 1fr); }
   }
+
+  .q-domain-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .q-review-badge {
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+  }
+  .q-review-badge.fixed {
+    background: var(--good-bg);
+    color: var(--good);
+    border: 1px solid var(--good-border);
+  }
+  .q-review-badge.disputed {
+    background: var(--signal-soft);
+    color: var(--signal);
+    border: 1px solid color-mix(in srgb, var(--signal) 40%, transparent);
+  }
+  .review-callout {
+    margin-top: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .review-callout.fixed {
+    background: var(--good-bg);
+    border-left: 3px solid var(--good);
+  }
+  .review-callout.disputed {
+    background: var(--signal-soft);
+    border-left: 3px solid var(--signal);
+  }
+  .review-callout-title {
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .general-exp h4, .review-callout h4 {
+    margin: 12px 0 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .general-exp p, .review-callout p {
+    margin: 6px 0;
+  }
+  .general-exp ul, .review-callout ul {
+    margin: 6px 0;
+    padding-left: 20px;
+  }
+  .general-exp li, .review-callout li {
+    margin: 4px 0;
+  }
+  .general-exp code, .review-callout code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--panel);
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+  .general-exp a, .review-callout a {
+    color: var(--accent);
+    text-decoration: underline;
+    word-break: break-all;
+  }
+  .vi-details {
+    margin-top: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    padding: 7px 12px;
+    font-size: 13.5px;
+  }
+  .vi-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent);
+    user-select: none;
+    list-style: none;
+  }
+  .vi-details summary::-webkit-details-marker { display: none; }
+  .vi-details[open] summary {
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .vi-stem {
+    color: var(--ink);
+    white-space: pre-wrap;
+    margin-bottom: 8px;
+    line-height: 1.55;
+  }
+  .vi-opts {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--ink-soft);
+  }
+  .vi-opts li {
+    margin: 4px 0;
+  }
+  .vi-opts li.vi-opt-correct {
+    color: var(--good);
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -1263,7 +1378,7 @@
       Tài liệu ôn tập <span class="pill">30 bài</span>
     </button>
     <button class="nav-tab" id="tabPractice" type="button" role="tab" aria-selected="false">
-      Luyện tập Trắc nghiệm <span class="pill" id="qCountPill">317 câu</span>
+      Luyện tập Trắc nghiệm <span class="pill" id="qCountPill">621 câu</span>
     </button>
   </nav>
 
@@ -6516,8 +6631,9 @@ if not extraction.get("vendor"):  # missing critical field
   <div class="practice-wrap">
     <div class="subtab-bar">
       <div class="cert-switch" role="group" aria-label="Chọn bộ chứng chỉ">
-        <button class="cert-btn active" id="certCcaBtn" type="button">CCA-F (162 câu)</button>
-        <button class="cert-btn" id="certCcdvBtn" type="button">CCDV-F (155 câu)</button>
+        <button class="cert-btn active" id="certCcaBtn" type="button">CCA-F · 162 câu</button>
+        <button class="cert-btn" id="certCca309Btn" type="button">CCA-F · Bộ 309 (304 câu)</button>
+        <button class="cert-btn" id="certCcdvBtn" type="button">CCDV-F · 155 câu</button>
       </div>
 
       <div class="subtabs" role="tablist">
@@ -6663,13 +6779,21 @@ if not extraction.get("vendor"):  # missing critical field
 
   var BANKS = {
     cca: {
-      code: "CCA-F",
-      title: "Đề thi thử chứng chỉ CCA Foundations (CCA-F)",
+      code: "CCA-F (162)",
+      title: "Đề thi thử chứng chỉ CCA Foundations (CCA-F · Bộ 162 câu)",
+      maxNum: 162,
       questions: Array.isArray(window.CCA_QUESTIONS) ? window.CCA_QUESTIONS : []
+    },
+    cca309: {
+      code: "CCA-F (Bộ 309)",
+      title: "Đề thi thử chứng chỉ CCA Foundations (CCA-F · Bộ 309 câu)",
+      maxNum: 309,
+      questions: Array.isArray(window.CCA309_QUESTIONS) ? window.CCA309_QUESTIONS : []
     },
     ccdv: {
       code: "CCDV-F",
       title: "Đề thi thử chứng chỉ Claude Certified Developer Foundations (CCDV-F)",
+      maxNum: 155,
       questions: Array.isArray(window.CCDV_QUESTIONS) ? window.CCDV_QUESTIONS : []
     }
   };
@@ -6677,6 +6801,15 @@ if not extraction.get("vendor"):  # missing critical field
   var activeCert = "cca";
   function getActiveQuestions() {
     return BANKS[activeCert].questions;
+  }
+
+  var totalAllQuestions =
+    BANKS.cca.questions.length +
+    BANKS.cca309.questions.length +
+    BANKS.ccdv.questions.length;
+  var qCountPill = document.getElementById("qCountPill");
+  if (qCountPill && totalAllQuestions > 0) {
+    qCountPill.textContent = totalAllQuestions + " câu";
   }
 
   var LETTERS = ["A", "B", "C", "D", "E", "F"];
@@ -6817,6 +6950,108 @@ if not extraction.get("vendor"):  # missing critical field
     return safe.replace(re, "<mark>$1</mark>");
   }
 
+  function formatInlineMarkdown(rawText, tokens) {
+    // Extract markdown links [label](https://...) first so URLs don't get broken by escaping/highlighting
+    var links = [];
+    var placeholderText = String(rawText).replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, label, url) {
+      var idx = links.length;
+      links.push({ label: label, url: url });
+      return "@@MDLINK_" + idx + "@@";
+    });
+
+    var html = highlightTokens(placeholderText, tokens);
+    // Bold **...**
+    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    // Inline code `...`
+    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+    // Restore links
+    html = html.replace(/@@MDLINK_(\d+)@@/g, function (_, idxStr) {
+      var item = links[Number(idxStr)];
+      if (!item) return "";
+      return '<a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + highlightTokens(item.label, tokens) + "</a>";
+    });
+    return html;
+  }
+
+  function renderMarkdownExplanation(mdText, tokens) {
+    if (!mdText) return "";
+    var lines = String(mdText).split(/\r?\n/);
+    var out = [];
+    var inList = false;
+
+    for (var i = 0; i < lines.length; i++) {
+      var trimmed = lines[i].trim();
+      if (!trimmed) {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        continue;
+      }
+      if (trimmed.indexOf("#### ") === 0) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h4>" + formatInlineMarkdown(trimmed.slice(5), tokens) + "</h4>");
+      } else if (trimmed.indexOf("### ") === 0) {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h4>" + formatInlineMarkdown(trimmed.slice(4), tokens) + "</h4>");
+      } else if (trimmed.indexOf("- ") === 0) {
+        if (!inList) {
+          out.push("<ul>");
+          inList = true;
+        }
+        out.push("<li>" + formatInlineMarkdown(trimmed.slice(2), tokens) + "</li>");
+      } else {
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<p>" + formatInlineMarkdown(trimmed, tokens) + "</p>");
+      }
+    }
+    if (inList) out.push("</ul>");
+    return out.join("");
+  }
+
+  function renderReviewCallout(rev, tokens) {
+    if (!rev || (!rev.note && !rev.explanation)) return "";
+    var isFixed = rev.status === "fixed";
+    var cls = isFixed ? "review-callout fixed" : "review-callout disputed";
+    var heading = isFixed ? "✓ Đã đính chính theo Exam Guide:" : "⚠ Lưu ý rà soát (Câu có điểm cần lưu ý):";
+    var bodyHtml = "";
+    if (rev.note) {
+      bodyHtml += "<p>" + formatInlineMarkdown(rev.note, tokens) + "</p>";
+    }
+    if (rev.explanation) {
+      bodyHtml += renderMarkdownExplanation(rev.explanation, tokens);
+    }
+    return '<div class="' + cls + '"><div class="review-callout-title">' + heading + "</div>" + bodyHtml + "</div>";
+  }
+
+  function renderVietnameseDetails(viObj, optionOrder, correctSet, tokens) {
+    if (!viObj || !viObj.stem) return "";
+    var viOpts = Array.isArray(viObj.options) ? viObj.options : [];
+    var order = optionOrder || viOpts.map(function (_, idx) { return idx; });
+    var optsListHtml = "";
+    if (viOpts.length > 0) {
+      var liItems = [];
+      for (var i = 0; i < order.length; i++) {
+        var origIdx = order[i];
+        var txt = viOpts[origIdx];
+        if (txt === undefined) continue;
+        var isCorr = correctSet && correctSet.indexOf(i) !== -1;
+        var liCls = isCorr ? ' class="vi-opt-correct"' : "";
+        liItems.push("<li" + liCls + "><strong>" + LETTERS[i] + ".</strong> " + highlightTokens(txt, tokens) + (isCorr ? " ✓" : "") + "</li>");
+      }
+      if (liItems.length > 0) {
+        optsListHtml = '<ol class="vi-opts" type="A">' + liItems.join("") + "</ol>";
+      }
+    }
+    return (
+      '<details class="vi-details">' +
+        "<summary>🌐 Xem bản dịch tiếng Việt</summary>" +
+        '<div class="vi-stem">' + highlightTokens(viObj.stem, tokens) + "</div>" +
+        optsListHtml +
+      "</details>"
+    );
+  }
+
   function shuffleArray(arr) {
     var copy = arr.slice();
     for (var i = copy.length - 1; i > 0; i--) {
@@ -6838,6 +7073,7 @@ if not extraction.get("vendor"):  # missing critical field
 
   /* ---------------- Cert Bank Switching ---------------- */
   var certCcaBtn = document.getElementById("certCcaBtn");
+  var certCca309Btn = document.getElementById("certCca309Btn");
   var certCcdvBtn = document.getElementById("certCcdvBtn");
   var bankSubtabCount = document.getElementById("bankSubtabCount");
   var examIntroTitle = document.getElementById("examIntroTitle");
@@ -6852,6 +7088,7 @@ if not extraction.get("vendor"):  # missing critical field
     var totalQ = bank.questions.length;
 
     certCcaBtn.classList.toggle("active", certKey === "cca");
+    certCca309Btn.classList.toggle("active", certKey === "cca309");
     certCcdvBtn.classList.toggle("active", certKey === "ccdv");
     bankSubtabCount.textContent = String(totalQ);
     examIntroTitle.textContent = bank.title;
@@ -6869,14 +7106,15 @@ if not extraction.get("vendor"):  # missing critical field
     examActive.classList.add("hide");
 
     // Update Question Bank controls
-    jumpInput.max = String(totalQ);
-    jumpInput.placeholder = "Số Q (1-" + totalQ + ")";
-    distractorToggleWrap.classList.toggle("hide", certKey === "ccdv");
+    jumpInput.max = String(bank.maxNum);
+    jumpInput.placeholder = "Số Q (1-" + bank.maxNum + ")";
+    distractorToggleWrap.classList.toggle("hide", certKey !== "cca");
     bankSearchInput.value = "";
     renderBank();
   }
 
   certCcaBtn.addEventListener("click", function () { switchCertBank("cca"); });
+  certCca309Btn.addEventListener("click", function () { switchCertBank("cca309"); });
   certCcdvBtn.addEventListener("click", function () { switchCertBank("ccdv"); });
 
   /* ---------------- View 2: Sub-tabs ---------------- */
@@ -6905,7 +7143,7 @@ if not extraction.get("vendor"):  # missing critical field
   var EXAM_SECONDS = 90 * 60;
 
   var examState = {
-    certCode: "CCA-F",
+    certCode: "CCA-F (162)",
     questions: [],
     answers: {},   // idx -> sorted array of selected option indices, e.g. [1] or [0, 2]
     locked: {},    // idx -> true once graded & locked
@@ -6978,6 +7216,7 @@ if not extraction.get("vendor"):  # missing critical field
       var origCorrectSet = Array.isArray(q.correctIndices) ? q.correctIndices : [q.correctIndex];
       var indexedOpts = q.options.map(function (opt, oIdx) {
         return {
+          origIdx: oIdx,
           text: opt.text,
           explanation: opt.explanation || "",
           isCorrect: origCorrectSet.indexOf(oIdx) !== -1
@@ -6985,7 +7224,9 @@ if not extraction.get("vendor"):  # missing critical field
       });
       var shuffledOpts = shuffleArray(indexedOpts);
       var newCorrectIndices = [];
+      var optionOrder = [];
       for (var i = 0; i < shuffledOpts.length; i++) {
+        optionOrder.push(shuffledOpts[i].origIdx);
         if (shuffledOpts[i].isCorrect) {
           newCorrectIndices.push(i);
         }
@@ -6994,12 +7235,16 @@ if not extraction.get("vendor"):  # missing critical field
         examIndex: index,
         id: q.id,
         num: q.num,
+        domain: q.domain || "",
         multi: !!q.multi || newCorrectIndices.length > 1,
         question: q.question,
         options: shuffledOpts,
+        optionOrder: optionOrder,
         correctIndex: newCorrectIndices[0],
         correctIndices: newCorrectIndices,
-        generalExplanation: q.generalExplanation || ""
+        generalExplanation: q.generalExplanation || "",
+        review: q.review || null,
+        vi: q.vi || null
       };
     });
     examState.answers = {};
@@ -7114,6 +7359,10 @@ if not extraction.get("vendor"):  # missing critical field
     var isUnanswered = chosen.length === 0;
     var isCorrect = isLocked && !isUnanswered && arraysEqual(chosen, q.correctIndices);
 
+    var domainBadge = q.domain
+      ? '<span class="q-domain-badge">' + escapeHtml(q.domain) + "</span>"
+      : "";
+
     var multiBadge = q.multi
       ? '<span class="q-multi-badge">Chọn ' + q.correctIndices.length + " đáp án</span>"
       : "";
@@ -7180,15 +7429,18 @@ if not extraction.get("vendor"):  # missing critical field
         "</div>";
     }
 
+    var revHtml = isLocked && q.review ? renderReviewCallout(q.review, null) : "";
     var genExpHtml = "";
     if (isLocked && q.generalExplanation) {
-      genExpHtml = '<div class="general-exp">' + escapeHtml(q.generalExplanation) + "</div>";
+      genExpHtml = '<div class="general-exp">' + renderMarkdownExplanation(q.generalExplanation, null) + "</div>";
     }
+    var viHtml = isLocked && q.vi ? renderVietnameseDetails(q.vi, q.optionOrder, q.correctIndices, null) : "";
 
     return (
       '<div class="q-top">' +
         '<div class="q-badges">' +
           '<span class="q-num">Câu ' + (idx + 1) + " / " + total + "</span>" +
+          domainBadge +
           multiBadge +
           origBadge +
           statusBadge +
@@ -7198,7 +7450,9 @@ if not extraction.get("vendor"):  # missing critical field
       '<div class="q-stem">' + escapeHtml(q.question) + "</div>" +
       '<div class="opt-group">' + optsHtml + "</div>" +
       multiActionHtml +
-      genExpHtml
+      revHtml +
+      genExpHtml +
+      viHtml
     );
   }
 
@@ -7433,7 +7687,13 @@ if not extraction.get("vendor"):  # missing critical field
 
   function buildSearchIndex(questions) {
     return questions.map(function (q) {
-      var combined = [q.id, String(q.num), q.question, q.generalExplanation || ""]
+      var viText = q.vi
+        ? [q.vi.stem || ""].concat(Array.isArray(q.vi.options) ? q.vi.options : []).join(" ")
+        : "";
+      var revText = q.review
+        ? [q.review.status || "", q.review.note || "", q.review.explanation || ""].join(" ")
+        : "";
+      var combined = [q.id, String(q.num), q.domain || "", q.question, q.generalExplanation || "", viText, revText]
         .concat(q.options.map(function (o) { return o.text + " " + (o.explanation || ""); }))
         .join(" ")
         .toLowerCase();
@@ -7443,6 +7703,7 @@ if not extraction.get("vendor"):  # missing critical field
 
   var searchIndices = {
     cca: buildSearchIndex(BANKS.cca.questions),
+    cca309: buildSearchIndex(BANKS.cca309.questions),
     ccdv: buildSearchIndex(BANKS.ccdv.questions)
   };
 
@@ -7505,9 +7766,19 @@ if not extraction.get("vendor"):  # missing critical field
     for (var k = 0; k < filtered.length; k++) {
       var q = filtered[k];
       var correctSet = Array.isArray(q.correctIndices) ? q.correctIndices : [q.correctIndex];
+      var domainBadge = q.domain
+        ? '<span class="q-domain-badge">' + highlightTokens(q.domain, tokens) + "</span>"
+        : "";
       var multiBadge = q.multi
         ? '<span class="q-multi-badge">Chọn ' + correctSet.length + " đáp án</span>"
         : "";
+      var reviewBadge = "";
+      if (q.review && q.review.status === "fixed") {
+        reviewBadge = '<span class="q-review-badge fixed">✓ Đã đính chính</span>';
+      } else if (q.review && q.review.status === "disputed") {
+        reviewBadge = '<span class="q-review-badge disputed">⚠ Lưu ý rà soát</span>';
+      }
+
       var optsHtml = "";
       for (var oIdx = 0; oIdx < q.options.length; oIdx++) {
         var opt = q.options[oIdx];
@@ -7530,22 +7801,28 @@ if not extraction.get("vendor"):  # missing critical field
           "</div>";
       }
 
+      var revCalloutHtml = q.review ? renderReviewCallout(q.review, tokens) : "";
       var genExpHtml = "";
       if (q.generalExplanation) {
-        genExpHtml = '<div class="general-exp">' + highlightTokens(q.generalExplanation, tokens) + "</div>";
+        genExpHtml = '<div class="general-exp">' + renderMarkdownExplanation(q.generalExplanation, tokens) + "</div>";
       }
+      var viHtml = q.vi ? renderVietnameseDetails(q.vi, null, correctSet, tokens) : "";
 
       html +=
         '<article class="q-card" id="bank-' + activeCert + "-" + q.id + '">' +
           '<div class="q-top">' +
             '<div class="q-badges">' +
               '<span class="q-num">' + highlightTokens(q.id, tokens) + "</span>" +
+              domainBadge +
               multiBadge +
+              reviewBadge +
             "</div>" +
           "</div>" +
           '<div class="q-stem">' + highlightTokens(q.question, tokens) + "</div>" +
           '<div class="opt-group">' + optsHtml + "</div>" +
+          revCalloutHtml +
           genExpHtml +
+          viHtml +
         "</article>";
     }
     bankQuestionList.innerHTML = html;
@@ -7566,14 +7843,21 @@ if not extraction.get("vendor"):  # missing critical field
   chkShowAllExplanations.addEventListener("change", renderBank);
 
   function jumpToQuestionNumber() {
-    var totalQ = getActiveQuestions().length;
+    var bank = BANKS[activeCert];
     var n = Number(jumpInput.value);
-    if (!n || n < 1 || n > totalQ) return;
+    if (!n || n < 1 || n > bank.maxNum) return;
     if (bankSearchInput.value.trim() !== "") {
       bankSearchInput.value = "";
       renderBank();
     }
     var target = document.getElementById("bank-" + activeCert + "-Q" + n);
+    if (!target && bank.questions.length > 0) {
+      // Fallback to nearest existing question number (for skipped numbers in Bộ 309)
+      var nearest = bank.questions.reduce(function (prev, curr) {
+        return Math.abs(curr.num - n) < Math.abs(prev.num - n) ? curr : prev;
+      });
+      target = document.getElementById("bank-" + activeCert + "-" + nearest.id);
+    }
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
