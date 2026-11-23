@@ -7781,21 +7781,21 @@ if not extraction.get("vendor"):  # missing critical field
 
       var optsHtml = "";
       for (var oIdx = 0; oIdx < q.options.length; oIdx++) {
-        var opt = q.options[oIdx];
         var isCorrect = correctSet.indexOf(oIdx) !== -1;
-        var optCls = isCorrect ? "opt-item correct" : "opt-item";
-        var tagHtml = isCorrect ? '<span class="opt-tag good">✓ Đáp án đúng</span>' : "";
+        if (!isCorrect) continue;
+
+        var opt = q.options[oIdx];
         var expHtml = "";
-        if (!q.generalExplanation && opt.explanation && (isCorrect || showAllExp)) {
+        if (!q.generalExplanation && opt.explanation) {
           expHtml = '<div class="opt-exp">' + highlightTokens(opt.explanation, tokens) + "</div>";
         }
 
         optsHtml +=
-          '<div class="' + optCls + '">' +
+          '<div class="opt-item correct">' +
             '<div class="opt-row">' +
               '<span class="opt-key">' + LETTERS[oIdx] + "</span>" +
               '<div class="opt-text">' + highlightTokens(opt.text, tokens) + "</div>" +
-              tagHtml +
+              '<span class="opt-tag good">✓ Đáp án đúng</span>' +
             "</div>" +
             expHtml +
           "</div>";
